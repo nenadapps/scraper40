@@ -86,11 +86,15 @@ def get_details(url):
     try:
         image_items = html.select('form tr td img')
         for image_item in image_items:
-            img = base_url + image_item.get('src')
-            if img not in images:
-                images.append(img)
+            img_src = image_item.get('src')
+            if 'Ext.JPG' in img_src:
+                img = base_url + '/' + img_src
+                if img not in images:
+                    images.append(img)
     except:
         pass
+    
+    stamp['image_urls'] = images 
         
     # scrape date in format YYYY-MM-DD
     scrape_date = datetime.date.today().strftime('%Y-%m-%d')
