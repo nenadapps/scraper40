@@ -110,13 +110,23 @@ def get_details(url):
     # image_urls should be a list
     images = []                    
     try:
-        image_items = html.select('form tr td img')
-        for image_item in image_items:
-            img_src = image_item.get('src')
-            if 'Ext.JPG' in img_src:
-                img = base_url + '/' + img_src
-                if img not in images:
-                    images.append(img)
+        if html.select('.ProductDetails'):
+            img_cont = html.select('.ProductDetails')[0]
+            if 'To view a larger image of this item' in str(img_cont):
+                for img_link in img_cont.select('a'):
+                      img_text = img_link.get_text().strip()
+                      if img_text == 'click here':
+                          img = img_link.get('href')
+                          images.append(img)
+        
+        if not len(images):                  
+            image_items = html.select('form tr td img')
+            for image_item in image_items:
+                img_src = image_item.get('src')
+                if 'Ext.JPG' in img_src:
+                    img = base_url + '/' + img_src
+                    if img not in images:
+                        images.append(img)
     except:
         pass
     
